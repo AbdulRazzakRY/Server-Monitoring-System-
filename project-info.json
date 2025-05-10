@@ -1,0 +1,30 @@
+{
+  "name": "Server Monitoring System",
+  "version": "1.0",
+  "created": "2025-09-04T14:36:18.202980",
+  "files_count": 12,
+  "files": [
+    "bash_monitor_system.sh",
+    "python_monitor_system.py",
+    "requirements.txt",
+    "config.yaml",
+    "monitoring.conf",
+    "slack_config.json",
+    "email_template.html",
+    "server-monitor.service",
+    "server-monitor.timer",
+    "server-monitor-oneshot.service",
+    "install_cron.sh",
+    "install.sh"
+  ],
+  "features": [
+    "CPU/Memory/Disk monitoring",
+    "Email and Slack alerts",
+    "Systemd and Cron scheduling",
+    "Bash and Python implementations",
+    "Comprehensive configuration",
+    "Security hardening",
+    "Multi-OS support",
+    "Automated installation"
+  ]
+}

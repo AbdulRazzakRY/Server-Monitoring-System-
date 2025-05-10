@@ -1,0 +1,25 @@
+[Unit]
+Description=Server Monitoring Timer
+Documentation=https://github.com/yourorg/server-monitoring
+Requires=server-monitor.service
+
+[Timer]
+# Run immediately after boot (with a 2-minute delay)
+OnBootSec=2min
+
+# Run every 5 minutes
+OnUnitActiveSec=5min
+
+# Alternative: run at specific times
+# OnCalendar=*:0/5  # Every 5 minutes
+# OnCalendar=hourly # Every hour
+# OnCalendar=daily  # Every day at midnight
+
+# Ensure timer doesn't drift
+AccuracySec=1s
+
+# Run even if the system was suspended
+Persistent=true
+
+[Install]
+WantedBy=timers.target

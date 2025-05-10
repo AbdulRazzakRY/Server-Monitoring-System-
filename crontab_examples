@@ -1,0 +1,87 @@
+# Server Monitoring System - Crontab Examples
+# =============================================
+
+# Basic Examples
+# --------------
+
+# Run every 5 minutes
+*/5 * * * * /opt/server-monitoring/scripts/bash/monitor_system.sh
+
+# Run every 10 minutes with logging
+*/10 * * * * /opt/server-monitoring/scripts/python/monitor_system.py >> /var/log/monitor-cron.log 2>&1
+
+# Run every hour
+0 * * * * /opt/server-monitoring/scripts/bash/monitor_system.sh
+
+# Run daily at 2:00 AM
+0 2 * * * /opt/server-monitoring/scripts/python/monitor_system.py
+
+# Advanced Examples
+# -----------------
+
+# Run every 5 minutes during business hours (8 AM to 6 PM, Monday to Friday)
+*/5 8-18 * * 1-5 /opt/server-monitoring/scripts/bash/monitor_system.sh
+
+# Run every 15 minutes, but only send alerts during business hours
+*/15 * * * * /opt/server-monitoring/scripts/python/monitor_system.py --quiet
+*/15 8-18 * * 1-5 /opt/server-monitoring/scripts/python/monitor_system.py
+
+# Run different checks at different intervals
+*/5 * * * * /opt/server-monitoring/scripts/bash/monitor_system.sh --quick
+0 * * * * /opt/server-monitoring/scripts/python/monitor_system.py --full-check
+
+# Weekend monitoring (less frequent)
+*/15 * * * 1-5 /opt/server-monitoring/scripts/bash/monitor_system.sh    # Weekdays: every 15 min
+*/30 * * * 0,6 /opt/server-monitoring/scripts/bash/monitor_system.sh    # Weekends: every 30 min
+
+# Environment-specific Examples
+# ------------------------------
+
+# Production server (frequent monitoring)
+*/2 * * * * /opt/server-monitoring/scripts/python/monitor_system.py --config /etc/server-monitoring/prod.yaml
+
+# Development server (less frequent)
+*/15 * * * * /opt/server-monitoring/scripts/bash/monitor_system.sh --config /etc/server-monitoring/dev.conf
+
+# Test mode (no alerts sent)
+*/5 * * * * /opt/server-monitoring/scripts/python/monitor_system.py --test
+
+# Complete Crontab Entry with Error Handling
+# -------------------------------------------
+
+# Set environment variables
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=admin@company.com
+
+# Main monitoring job with comprehensive logging
+*/5 * * * * /opt/server-monitoring/scripts/python/monitor_system.py 2>&1 | /usr/bin/logger -t server-monitor
+
+# Alternative with rotation and error handling
+*/5 * * * * /opt/server-monitoring/scripts/bash/monitor_system.sh 2>&1 | /usr/bin/rotatelogs /var/log/server-monitor/cron-%Y%m%d.log 86400
+
+# Health check for the monitoring system itself
+0 */4 * * * /opt/server-monitoring/utils/health_check.sh
+
+# Installation Commands
+# ---------------------
+
+# To install these cron jobs:
+# 1. Edit the crontab: crontab -e
+# 2. Add desired entries from above
+# 3. Save and exit
+
+# To view current crontab: crontab -l
+# To remove all cron jobs: crontab -r
+
+# System-wide cron (requires root)
+# ---------------------------------
+# You can also place scripts in:
+# /etc/cron.d/server-monitoring (for custom timing)
+# /etc/cron.hourly/server-monitoring (runs hourly)
+# /etc/cron.daily/server-monitoring (runs daily)
+# /etc/cron.weekly/server-monitoring (runs weekly)
+# /etc/cron.monthly/server-monitoring (runs monthly)
+
+# Example system-wide cron file (/etc/cron.d/server-monitoring):
+# */5 * * * * monitor /opt/server-monitoring/scripts/python/monitor_system.py

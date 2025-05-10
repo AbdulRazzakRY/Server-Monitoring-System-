@@ -1,0 +1,38 @@
+[Unit]
+Description=Server Monitoring Check (One-shot)
+Documentation=https://github.com/yourorg/server-monitoring
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+User=monitor
+Group=monitor
+WorkingDirectory=/opt/server-monitoring
+Environment=PYTHONPATH=/opt/server-monitoring
+Environment=CONFIG_FILE=/opt/server-monitoring/config/config.yaml
+
+# Run monitoring once
+ExecStart=/usr/bin/python3 /opt/server-monitoring/scripts/python/monitor_system.py
+
+# Timeout after 5 minutes
+TimeoutStartSec=300
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/server-monitoring/logs
+ReadOnlyPaths=/opt/server-monitoring
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=server-monitor-check
+
+# Don't restart on failure (one-shot)
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

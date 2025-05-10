@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Alert</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header.critical {
+            background: linear-gradient(135deg, #ff4757 0%, #c44569 100%);
+        }
+        .header.warning {
+            background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .header .hostname {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .alert-summary {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .alert-summary.critical {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .alert-summary.warning {
+            border-left-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .alert-item {
+            background-color: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .alert-type {
+            font-weight: bold;
+            color: #495057;
+            text-transform: uppercase;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .alert-message {
+            font-size: 16px;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+        .alert-details {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .metrics-table th {
+            background-color: #495057;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .metrics-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+        .metric-value {
+            font-weight: bold;
+        }
+        .metric-good { color: #28a745; }
+        .metric-warning { color: #ffc107; }
+        .metric-critical { color: #dc3545; }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+        .timestamp {
+            font-family: 'Courier New', monospace;
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-good { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-critical { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header {{SEVERITY_CLASS}}">
+            <h1>🚨 Server Alert</h1>
+            <div class="hostname">{{HOSTNAME}}</div>
+            <div class="timestamp">{{TIMESTAMP}}</div>
+        </div>
+
+        <div class="content">
+            <div class="alert-summary {{SEVERITY_CLASS}}">
+                <h3>Alert Summary</h3>
+                <p><strong>{{ALERT_COUNT}} alert(s)</strong> detected on your server.</p>
+            </div>
+
+            <h3>Active Alerts</h3>
+            {{ALERTS_HTML}}
+
+            <h3>System Metrics</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Current Value</th>
+                        <th>Threshold</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{METRICS_HTML}}
+                </tbody>
+            </table>
+
+            <h3>System Information</h3>
+            <table class="metrics-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Hostname</strong></td>
+                        <td>{{HOSTNAME}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uptime</strong></td>
+                        <td>{{UPTIME}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Load Average</strong></td>
+                        <td>{{LOAD_AVERAGE}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Processes</strong></td>
+                        <td>{{PROCESS_COUNT}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>This alert was generated by the Server Monitoring System.</p>
+            <p>To stop receiving these alerts, please contact your system administrator.</p>
+        </div>
+    </div>
+</body>
+</html>

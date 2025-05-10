@@ -1,0 +1,42 @@
+[Unit]
+Description=Server Monitoring System
+Documentation=https://github.com/yourorg/server-monitoring
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=monitor
+Group=monitor
+WorkingDirectory=/opt/server-monitoring
+Environment=PYTHONPATH=/opt/server-monitoring
+Environment=CONFIG_FILE=/opt/server-monitoring/config/config.yaml
+
+# Python monitoring script
+ExecStart=/usr/bin/python3 /opt/server-monitoring/scripts/python/monitor_system.py --continuous
+
+# Restart settings
+Restart=always
+RestartSec=10
+StartLimitInterval=60
+StartLimitBurst=3
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/server-monitoring/logs
+ReadOnlyPaths=/opt/server-monitoring
+
+# Resource limits
+MemoryLimit=256M
+CPUQuota=10%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=server-monitor
+
+[Install]
+WantedBy=multi-user.target

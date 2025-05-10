@@ -1,0 +1,49 @@
+{
+  "slack": {
+    "webhook_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "channel": "#monitoring",
+    "username": "ServerBot",
+    "icon_emoji": ":warning:",
+    "enabled": false,
+    "message_templates": {
+      "high_cpu": "🔥 High CPU Alert: {value}% on {hostname}",
+      "high_memory": "🧠 High Memory Alert: {value}% on {hostname}",
+      "high_disk": "💾 High Disk Usage: {value}% on {mountpoint} ({hostname})",
+      "high_load": "📊 High Load Average: {value} on {hostname}",
+      "network_issue": "🌐 Network connectivity issues on {hostname}",
+      "service_down": "🚫 Service {service} is down on {hostname}",
+      "temperature_high": "🌡️ High temperature: {value}°C on {sensor} ({hostname})"
+    },
+    "color_scheme": {
+      "critical": "#ff0000",
+      "warning": "#ff9900", 
+      "info": "#0099ff",
+      "success": "#00ff00"
+    }
+  },
+  "notification_rules": {
+    "rate_limiting": {
+      "enabled": true,
+      "max_alerts_per_hour": 10,
+      "cooldown_period": 300
+    },
+    "escalation": {
+      "enabled": false,
+      "levels": [
+        {
+          "threshold_minutes": 5,
+          "channels": ["#monitoring"]
+        },
+        {
+          "threshold_minutes": 15,
+          "channels": ["#monitoring", "#critical-alerts"]
+        },
+        {
+          "threshold_minutes": 30,
+          "channels": ["#monitoring", "#critical-alerts"],
+          "mention_users": ["@admin", "@ops-team"]
+        }
+      ]
+    }
+  }
+}

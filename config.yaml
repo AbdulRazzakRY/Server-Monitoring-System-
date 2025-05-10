@@ -1,0 +1,89 @@
+# Server Monitoring System Configuration
+# =====================================
+
+# Monitoring thresholds (percentages)
+thresholds:
+  cpu_percent: 80.0          # CPU usage threshold
+  memory_percent: 85.0       # Memory usage threshold  
+  disk_percent: 90.0         # Disk usage threshold
+  load_average: 2.0          # Load average threshold
+  temperature: 70.0          # Temperature threshold (Celsius)
+
+# Monitoring settings
+monitoring:
+  interval: 300              # Check interval in seconds (5 minutes)
+  check_network: true        # Enable network connectivity checks
+  check_processes: true      # Enable process monitoring
+  check_temperature: true    # Enable temperature monitoring
+  history_size: 1000         # Number of historical records to keep
+
+# Email notification settings
+email:
+  enabled: true
+  smtp_server: "smtp.gmail.com"     # SMTP server
+  smtp_port: 587                    # SMTP port
+  use_tls: true                     # Use TLS encryption
+  username: "your-email@gmail.com"  # SMTP username
+  password: "your-app-password"     # SMTP password (use app password for Gmail)
+  from_address: "monitor@yourserver.com"
+  to_addresses:                     # List of recipient emails
+    - "admin@company.com"
+    - "ops-team@company.com"
+  subject_prefix: "[SERVER ALERT]"
+
+# Slack notification settings  
+slack:
+  enabled: false
+  webhook_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+  channel: "#monitoring"
+  username: "ServerBot"
+  icon_emoji: ":warning:"
+
+# Logging configuration
+logging:
+  level: "INFO"                    # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "monitor.log"              # Log file name (relative to logs/ directory)
+  max_bytes: 10485760             # 10MB max log file size
+  backup_count: 5                 # Number of backup log files
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Advanced settings (optional)
+advanced:
+  # Custom commands to run for additional checks
+  custom_checks:
+    - name: "disk_smart"
+      command: "smartctl -H /dev/sda"
+      enabled: false
+    - name: "service_status"  
+      command: "systemctl is-active nginx"
+      enabled: false
+
+  # Process monitoring whitelist/blacklist
+  process_monitoring:
+    high_cpu_threshold: 50.0      # Alert if process uses > 50% CPU
+    high_memory_threshold: 20.0   # Alert if process uses > 20% memory
+    monitor_specific_processes:   # Monitor these processes specifically
+      - "nginx"
+      - "mysql"
+      - "postgresql"
+      - "redis"
+
+  # Network monitoring
+  network_monitoring:
+    test_hosts:                   # Hosts to test connectivity
+      - "8.8.8.8"
+      - "1.1.1.1"  
+      - "google.com"
+    timeout: 5                    # Ping timeout in seconds
+
+  # Disk monitoring
+  disk_monitoring:
+    ignore_filesystems:           # Ignore these filesystem types
+      - "tmpfs"
+      - "devtmpfs"
+      - "proc"
+      - "sysfs"
+    ignore_mountpoints:           # Ignore these mount points
+      - "/dev/shm"
+      - "/run"
+      - "/sys/fs/cgroup"
